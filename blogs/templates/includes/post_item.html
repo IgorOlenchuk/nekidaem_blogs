@@ -1,0 +1,17 @@
+<div class="card mb-3 mt-1 shadow-sm">
+    <!-- Отображение текста поста -->
+    <div class="card-body">
+        <p class="card-text">
+            <!-- Ссылка на автора через @ -->
+            <a name="post_{{ post.id }}" href="{% url 'profile' post.author.username %}">
+                <strong class="d-block text-gray-dark">@{{ post.author }}</strong>
+            </a><br>
+            <h3>{{ post.title|linebreaksbr }}</h3><br>
+            {{ post.text|linebreaksbr }}
+        </p>
+
+            <!-- Дата публикации поста -->
+            <small class="text-muted">{{ post.pub_date }}</small>
+        </div>
+    </div>
+</div>

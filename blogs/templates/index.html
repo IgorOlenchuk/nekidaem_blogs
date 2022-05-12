@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %} Последние обновления {% endblock %}
+{% block content %}
+<div class="container">
+           {% include "includes/menu.html" with index=True %}
+                {% if request.user.is_authenticated %}
+                    {% include "follow.html" %}
+                {% else %}
+                <h1> Вы не зарегистрированы! <br> Чтобы увидеть посты, пройдите регистрацию. </h1>
+                {% endif %}
+
+                <!-- Вывод паджинатора -->
+               {% if page.has_other_pages %}
+                    {% include "includes/paginator.html" with items=page paginator=paginator%}
+               {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Блог>{% endblock %}
+{% block content %}
+    <div class="row">
+            <div class="col-md-3 mb-3 mt-1">
+                {% include 'includes/profile_card.html' %}
+            </div>
+
+            <div class="col-md-9">
+
+            <!-- Пост -->
+            {% for post in page %}
+                {% include "includes/post_item.html" with post=post %}
+            {% endfor %}
+     </div>
+    </div>
+{% endblock %}
