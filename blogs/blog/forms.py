@@ -1,16 +1,16 @@
-from django.forms import ModelForm
-from django.utils.translation import gettext_lazy as _
+from django import forms
 
-from .models import Post
+from .models import ReadPost
 
 
-class PostForm(ModelForm):
+class FormControlMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
+
+class ReadPostForm(FormControlMixin, forms.ModelForm):
     class Meta:
-
-        model = Post
-        fields = ["title", "text"]
-        labels = {
-            'title': _('Заголовок'),
-            'text': _('Текст'),
-        }
+        model = ReadPost
+        fields = '__all__'

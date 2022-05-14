@@ -1,108 +1,143 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, get_object_or_404, redirect
-from django.core.paginator import Paginator
-from django.views.decorators.cache import cache_page
-from .forms import PostForm
-from .models import Post, Follow
+from django.http import HttpResponseRedirect
 
-User = get_user_model()
+from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.generic import ListView, UpdateView, CreateView, \
+    DetailView, DeleteView
 
-
-#@cache_page(60 * 1440)
-def index(request):
-    post_list = Post.objects.order_by('-pub_date').all()
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    context ={
-        'page': page,
-        'paginator': paginator,
-    }
-    return render(request, 'index.html', context, content_type='text/html', status=200)
+from .models import Follow, Post, ReadPost
 
 
-@login_required
-def new_post(request):
-    form = PostForm()
-    if request.method == 'POST':
-        form = PostForm(
-                        request.POST,
-                        files=request.FILES or None,
-        )
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.author = request.user
-            post.save()
-            return redirect('index')
-    labels = {
-        'title': "Добавить запись",
-        'button': "Добавить",
-    }
-    return render(request, 'new.html', {'form': form, 'labels': labels})
+class AutoFieldForUserMixin:
+    def form_valid(self, form):
+        fields = form.save(commit=False)
+        fields.user = self.request.user
+        fields.save()
+        return super().form_valid(form)
 
 
-def profile(request, username):
-    profile = get_object_or_404(get_user_model(), username=username)
-    post_list = profile.author_posts.all()
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    following = get_object_or_404(User, username=username)
-    context = {
-        'profile': profile,
-        'page': page,
-        'paginator': paginator,
-        'following': following,
-    }
-    return render(request, 'profile.html', context)
+class OnlyLoggedUserMixin:
+    @method_decorator(login_required())
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
 
 
-def post_view(request, username, post_id):
-    profile = get_object_or_404(get_user_model(), username=username)
-    post = get_object_or_404(Post, id=post_id, author__username=username)
-    post_list = Post.objects.order_by('-pub_date').all()
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    context = {
-        'profile': profile,
-        'post': post,
-        'page': page,
-        'paginator': paginator,
-    }
-    return render(request, 'post.html', context)
+class NewsFeed(OnlyLoggedUserMixin, ListView):
+    template_name = 'blog/index.html'
+    model = Follow
+    context_object_name = 'posts'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'лента новостей'
+        return context
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            subscriptions = self.model.objects.filter(user=self.request.user)
+            return Post.objects.filter(
+                user__in=[
+                    subscribe.author_blog.pk for subscribe in subscriptions
+                ]
+            )
 
 
-@login_required
-def follow_index(request):
-    post_list = Post.objects.filter(author__following__user=request.user)
-    paginator = Paginator(post_list, 10)
-    page_number = request.GET.get('page')
-    page = paginator.get_page(page_number)
-    context = {
-        'page': page,
-        'paginator': paginator,
-    }
-    return render(request, "follow.html", context)
+class ReadPosts(OnlyLoggedUserMixin, View):
+    model = ReadPost
+
+    def post(self, request, *args, **kwargs):
+        post_pk = request.POST.get('read', '')
+        if post_pk:
+            try:
+                self.model.objects.get(
+                    user_id=request.user, post_id=post_pk).delete()
+            except self.model.DoesNotExist:
+                self.model.objects.create(
+                    user_id=request.user.pk, post_id=post_pk)
+        return HttpResponseRedirect(reverse_lazy('news-feed'))
 
 
-@login_required
-def profile_follow(request, username):
-    follower = request.user
-    following = get_object_or_404(User, username=username)
-    follows = Follow.objects.filter(user=follower, author=following)
-    if follows.exists() or follower.username == following.username:
-        return redirect("profile", username=username)
-    Follow.objects.create(user=follower, author=following)
-    return redirect("profile", username=username)
+class CreatePost(OnlyLoggedUserMixin, AutoFieldForUserMixin, CreateView):
+    template_name = 'blog/new.html'
+    model = Post
+    fields = ['title', 'text']
+    success_url = reverse_lazy('user-posts')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'создание поста'
+        return context
 
 
-@login_required
-def profile_unfollow(request, username):
-    my_user = request.user
-    profile = get_object_or_404(User, username=username)
-    subscription = Follow.objects.filter(user=my_user, author=profile)
-    if subscription.exists():
-        subscription.delete()
-    return redirect("profile", username=request.user.username)
+class UserPosts(OnlyLoggedUserMixin, ListView):
+    template_name = 'blog/profile.html'
+    model = Post
+    context_object_name = 'posts'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'мои посты'
+        return context
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return self.model.objects.filter(user=self.request.user)
+
+
+class SubscribeBlog(OnlyLoggedUserMixin, CreateView):
+    template_name = 'blog/subscribe_blog.html'
+    model = Follow
+    fields = ['author_blog']
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'подписаться на блог'
+        context['subscribes'] = self.get_subscribes()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        author_blog_pk = request.POST.get('author_blog', '')
+        if author_blog_pk:
+            try:
+                self.model.objects.get(
+                    user_id=request.user, author_blog_id=author_blog_pk
+                ).delete()
+            except self.model.DoesNotExist:
+                self.model.objects.create(
+                    user_id=request.user.pk, author_blog_id=author_blog_pk)
+        return HttpResponseRedirect(reverse_lazy('subscribe-blog'))
+
+    def get_subscribes(self):
+        if self.request.user.is_authenticated:
+            return self.model.objects.filter(user=self.request.user)
+
+
+class UpdatePost(OnlyLoggedUserMixin, AutoFieldForUserMixin, UpdateView):
+    template_name = 'blog/update_post.html'
+    model = Post
+    fields = ['title', 'text']
+    success_url = reverse_lazy('user-posts')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'подписаться на блог'
+        return context
+
+
+class DeletePost(OnlyLoggedUserMixin, AutoFieldForUserMixin, DeleteView):
+    template_name = 'blog/delete_post.html'
+    model = Post
+    success_url = reverse_lazy('user-posts')
+
+
+class PostPage(OnlyLoggedUserMixin, DetailView):
+    template_name = 'blog/post.html'
+    model = Post
+    context_object_name = 'post'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'страница поста'
+        return context
