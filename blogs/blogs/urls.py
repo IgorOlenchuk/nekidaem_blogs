@@ -6,10 +6,7 @@ from django.contrib.flatpages import views
 urlpatterns = [
     # раздел администратора
     path('admin/', admin.site.urls),
-    # flatpages
-    path('about/', include('django.contrib.flatpages.urls')),
-    # регистрация и авторизация
-    path('auth/', include('django.contrib.auth.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 urlpatterns += [
