@@ -9,7 +9,6 @@ urlpatterns = [
     # flatpages
     path('about/', include('django.contrib.flatpages.urls')),
     # регистрация и авторизация
-    path('auth/', include('Users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
 ]
 
