@@ -1,17 +1,37 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
+{% load my_tags %}
 {% block title %} Последние обновления {% endblock %}
 {% block content %}
 <div class="container">
-           {% include "includes/menu.html" with index=True %}
-                {% if request.user.is_authenticated %}
-                    {% include "follow.html" %}
-                {% else %}
-                <h1> Вы не зарегистрированы! <br> Чтобы увидеть посты, пройдите регистрацию. </h1>
-                {% endif %}
-
-                <!-- Вывод паджинатора -->
-               {% if page.has_other_pages %}
-                    {% include "includes/paginator.html" with items=page paginator=paginator%}
-               {% endif %}
+    {% include "blog/includes/menu.html" with index=True %}
+        <h2 class="">Лента новостей</h2>
+            {% for post in posts %}
+              {% if post.pk|is_read:request.user.pk == 'Прочитан' %}
+                <div class="text-success">
+              {% else %}
+                <div class="text-danger">
+              {% endif %}
+            <a href="{% url 'post-page' post.pk %}" class="post_link">
+              User: {{ post.user }} <br>
+              Title: {{ post.title }} <br>
+              Text: {{ post.text }} <br>
+              Create: {{ post.created }} <br>
+              Upd: {{ post.updated }}
+            </a>
+            <form action="{% url 'read-post' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="read" value={{ post.pk }}>
+              <input type="submit" value={{ post.pk|is_read:request.user.pk }}>
+            </form>
+            </div>
+              {% if post.user == request.user %}
+                Это мой пост
+                <a href="{% url 'update-post' post.pk %}" class="btn btn-success">
+                  можно обновить</a>
+                <a href="{% url 'remove-post' post.pk %}" class="btn btn-danger">
+                  или удалить</a><br>
+              {% endif %}
+              <br>
+            {% endfor %}
 </div>
 {% endblock %}

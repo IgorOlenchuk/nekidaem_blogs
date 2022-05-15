@@ -1,12 +1,16 @@
-{% if user.is_authenticated %} 
-<div class="row">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link {% if index %}active{% endif %}" href="{% url 'index' %}">Все авторы</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {% if follow %}active{% endif %}" href="/follow">Избранные авторы</a>
-        </li>
-    </ul>
-</div>
-{% endif %}
+<ul>
+  <li>Привет, {{ request.user }}!</li>
+  {% if request.resolver_match.url_name != 'user-posts' %}
+    <li><a href="{% url 'user-posts' %}">Мои посты</a></li>
+  {% endif %}
+  {% if request.resolver_match.url_name != 'create-post' %}
+    <li><a href="{% url 'create-post' %}">Создать пост</a></li>
+  {% endif %}
+  {% if request.resolver_match.url_name != 'news-feed' %}
+    <li><a href={% url 'news-feed' %}>Лента новостей</a></li>
+  {% endif %}
+  {% if request.resolver_match.url_name != 'subscribe-blog' %}
+    <li><a href={% url 'subscribe-blog' %}>Подписаться на блог</a></li>
+  {% endif %}
+  <li><a href={% url 'logout' %}>Выйти</a></li>
+</ul>

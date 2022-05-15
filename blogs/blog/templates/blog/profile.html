@@ -1,14 +1,14 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
 {% block title %}Профайл{% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-md-3 mb-3 mt-1">
-            {% include 'includes/profile_card.html' with profile_card=profile_card %}
+            {% include 'blog/includes/profile_card.html' with profile_card=profile_card %}
         </div>
             <div class="col-md-9">
                 <!-- Начало блока с отдельным постом -->
                 {% for post in page %}
-                    {% include "includes/post_item.html" with post=post %}
+                    {% include "blog/includes/post_item.html" with post=post %}
                 <!-- Конец блока с отдельным постом -->
                 {% endfor %}
 
@@ -22,7 +22,7 @@
                 <!-- Остальные посты -->
                 <!-- Здесь постраничная навигация паджинатора -->
                 {% if page.has_other_pages %}
-                {% include "includes/paginator.html" with items=page paginator=paginator %}
+                {% include "blog/includes/paginator.html" with items=page paginator=paginator %}
                 {% endif %}
             </div>
     </div>
