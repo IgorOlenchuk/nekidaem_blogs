@@ -32,5 +32,5 @@ jobs:
       run: |
         # запуск проверки проекта по flake8
         # python -m flake8
-        cd blogs/blog/
+        cd blogs/
         python manage.py test
