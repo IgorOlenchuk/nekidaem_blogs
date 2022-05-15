@@ -4,7 +4,6 @@ sqlparse==0.4.2
 tzdata==2022.1
 pytest-django
 Pillow~=9.1.0
-psycopg2~=2.9.3
 pip~=22.1
 attrs~=21.4.0
 py~=1.11.0
