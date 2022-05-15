@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.urls import include, path
 
+handler400 = 'blogs.views.page_bad_request'
+handler404 = 'blogs.views.page_not_found'
+handler500 = 'blogs.views.server_error'
 
 urlpatterns = [
     # раздел администратора
@@ -11,5 +14,6 @@ urlpatterns = [
 urlpatterns += [
         # импорт из приложения blog
         path('', include('blog.urls')),
+        path('api/', include('api.urls')),
         path('upload/', include('upload.urls')),
 ]
