@@ -14,7 +14,6 @@ router_v1.register(
 )
 router_v1.register(r'read', ReadPostViewSet, basename='read-post')
 
-
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
 ]

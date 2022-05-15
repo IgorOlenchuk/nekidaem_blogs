@@ -1,6 +1,6 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import HiddenField, CurrentUserDefault
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 
 from blog.models import Post
 from blog.models import ReadPost
@@ -13,13 +13,15 @@ def validate_author(data):
     return data
 
 
-class PostSerializer(ModelSerializer):
+class PostSerializer(serializers.ModelSerializer):
+    author_blog = serializers.CharField(source='user')
+
     class Meta:
-        fields = '__all__'
+        fields = ('title', 'text', 'updated', 'created', 'author_blog')
         model = Post
 
 
-class FollowSerializer(ModelSerializer):
+class FollowSerializer(serializers.ModelSerializer):
     user = HiddenField(default=CurrentUserDefault())
 
     class Meta:
@@ -28,7 +30,7 @@ class FollowSerializer(ModelSerializer):
         validators = (validate_author, )
 
 
-class ReadPostSerializer(ModelSerializer):
+class ReadPostSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = ReadPost

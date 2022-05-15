@@ -5,6 +5,7 @@ from .serializers import PostSerializer
 from .serializers import FollowSerializer
 from .serializers import ReadPostSerializer
 from .permissions import IsAuthorOrAdmin
+
 from blog.models import Post
 
 
@@ -15,25 +16,24 @@ class PostViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     search_fields = ('^title',)
 
 
-class CreateDestroyViewSet(mixins.CreateModelMixin,
-                           mixins.DestroyModelMixin,
-                           viewsets.GenericViewSet):
-    pass
-
-
-class FollowViewSet(CreateDestroyViewSet):
+class FollowViewSet(mixins.CreateModelMixin,
+                    mixins.DestroyModelMixin,
+                    viewsets.GenericViewSet):
     serializer_class = FollowSerializer
     permission_classes = (IsAuthenticated, IsAuthorOrAdmin)
-    lookup_field = 'author'
+    lookup_field = 'author_blog'
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
 
 
-class ReadPostViewSet(CreateDestroyViewSet):
+class ReadPostViewSet(mixins.CreateModelMixin,
+                      mixins.DestroyModelMixin,
+                      viewsets.GenericViewSet):
     serializer_class = ReadPostSerializer
     permission_classes = (AllowAny,)
     lookup_field = 'post'
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
+
