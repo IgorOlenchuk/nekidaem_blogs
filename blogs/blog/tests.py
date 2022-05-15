@@ -10,8 +10,3 @@ class StaticPagesURLTests(TestCase):
         """Проверка доступности страниц."""
         response = self.guest_client.get('/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_page_shows_correct_content(self):
-        """Проверка контента страниц."""
-        response = self.guest_client.get('/')
-        self.assertContains(response, 'лента новостей')
