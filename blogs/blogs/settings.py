@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'blog.apps.BlogConfig',
+    'upload.apps.UploadConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -148,5 +149,11 @@ CACHES = {
     }
 }
 
-USER_EXPIRES_TIMEDELTA = timedelta(hours=48)
+USER_EXPIRES_TIMEDELTA = timedelta(hours=24)
 
+# Путь до файлов json и дампов бд
+JSON_PATH = 'json'
+
+# логирование сообщений почты в виде файлов вместо отправки
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = 'temp/email-messages/'

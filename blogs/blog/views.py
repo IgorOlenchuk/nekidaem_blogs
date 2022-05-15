@@ -35,7 +35,8 @@ class NewsFeed(OnlyLoggedUserMixin, ListView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'лента новостей'
         return context
-    #У пользователя есть персональная лента новостей (не более ~500 постов), ограничил выборку в 500.
+
+    # У пользователя есть персональная лента новостей (не более ~500 постов), ограничил выборку в 500.
     def get_queryset(self):
         if self.request.user.is_authenticated:
             subscriptions = self.model.objects.filter(user=self.request.user)

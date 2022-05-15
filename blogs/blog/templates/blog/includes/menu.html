@@ -12,5 +12,8 @@
   {% if request.resolver_match.url_name != 'subscribe-blog' %}
     <li><a href={% url 'subscribe-blog' %}>Подписаться на блог</a></li>
   {% endif %}
+  {% if request.resolver_match.url_name != 'upload' %}
+    <li><a href={% url 'upload' %}>Загрузка файла</a></li>
+  {% endif %}
   <li><a href={% url 'logout' %}>Выйти</a></li>
 </ul>

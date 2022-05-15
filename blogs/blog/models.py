@@ -8,9 +8,9 @@ class Post(models.Model):
     # по условиям задачи не указан размер поля названия постов, сделал 39
     title = models.CharField(verbose_name='Заголовок', max_length=30, null=False)
     text = models.TextField(verbose_name='Текст', max_length=140)
-    created = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
+    created = models.DateTimeField(verbose_name='Создан', auto_now_add=True, db_index=True)
     # добавил время обновления постов
-    updated = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
+    updated = models.DateTimeField(verbose_name='Обновлен', auto_now=True,  db_index=True)
     user = models.ForeignKey(
         User, verbose_name='Пользователь', on_delete=models.CASCADE
     )
@@ -27,7 +27,7 @@ class Post(models.Model):
         ordering = ['-updated']
 
 
-#Подписка на потсы
+# Подписка на посты
 class Follow(models.Model):
     user = models.ForeignKey(
         User, verbose_name='Пользователь', on_delete=models.CASCADE

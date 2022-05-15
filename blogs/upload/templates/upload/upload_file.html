@@ -1,8 +1,9 @@
-{% extends 'personal_blog/base.html' %}
+{% extends "blog/base.html" %}
+{% block title %}Загрузить{% endblock %}
+{% block header %}Загрузить{% endblock %}
+{% block content %}
 
-{% block container %}
-
-  {% include 'personal_blog/inc/inc_auth_menu.html' %}
+    {% include 'blog/includes/menu.html' %}
 
     <h2 class="">Загрузить файл</h2>
 
