@@ -8,7 +8,7 @@ class StaticPagesURLTests(TestCase):
 
     def test_about_url_exists_at_desired_location(self):
         """Проверка доступности страниц."""
-        response = self.guest_client.get('/')
+        response = self.guest_client.get('/news-feed/')
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         response = self.guest_client.get('/news-feed/')
@@ -16,7 +16,7 @@ class StaticPagesURLTests(TestCase):
 
     def test_page_shows_correct_content(self):
         """Проверка контента страниц."""
-        response = self.guest_client.get('/')
+        response = self.guest_client.get('/news-feed/')
         self.assertContains(response, 'У меня получилось!')
 
         response = self.guest_client.get('/news-feed/')
