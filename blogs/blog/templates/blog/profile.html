@@ -1,29 +1,28 @@
 {% extends "blog/base.html" %}
-{% block title %}Профайл{% endblock %}
+{% block title %}Мои записи{% endblock %}
+{% block header %}Мои записи{% endblock %}
 {% block content %}
-    <div class="row">
-        <div class="col-md-3 mb-3 mt-1">
-            {% include 'blog/includes/profile_card.html' with profile_card=profile_card %}
-        </div>
-            <div class="col-md-9">
-                <!-- Начало блока с отдельным постом -->
-                {% for post in page %}
-                    {% include "blog/includes/post_item.html" with post=post %}
-                <!-- Конец блока с отдельным постом -->
-                {% endfor %}
 
-                {% for post in page %}
-                <h3>
-                    Дата публикации: {{ post.pub_date|date:"d M Y" }}
-                </h3>
-                <p>{{ post.text|linebreaksbr }}</p>
-                {% if not forloop.last %}<hr>{% endif %}
-                {% endfor %}
-                <!-- Остальные посты -->
-                <!-- Здесь постраничная навигация паджинатора -->
+    {% include 'blog/includes/menu.html' %}
+
+    <h2 class="">Мои посты</h2>
+        {% for post in posts %}
+          <div>
+            <a href="{% url 'post-page' post.pk %}" class="post_link">
+              Title: {{ post.title }} <br>
+              Text: {{ post.text }} <br>
+              Create: {{ post.created }} <br>
+              Upd: {{ post.updated }} <br>
+            </a><br>
+            <a href="{% url 'update-post' post.pk %}" class="btn btn-success">
+              Обновить пост</a>
+            <a href="{% url 'remove-post' post.pk %}" class="btn btn-danger">
+              Удалить пост</a><br>
+            <br>
+          </div>
+        {% endfor %}
+    <h3><a href="{% url 'create-post' %}">Создать пост</a></h3>
                 {% if page.has_other_pages %}
-                {% include "blog/includes/paginator.html" with items=page paginator=paginator %}
+                        {% include "blog/includes/paginator.html" with items=page paginator=paginator %}
                 {% endif %}
-            </div>
-    </div>
 {% endblock %}

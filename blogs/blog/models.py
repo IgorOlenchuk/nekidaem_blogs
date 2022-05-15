@@ -5,9 +5,11 @@ User = get_user_model()
 
 
 class Post(models.Model):
-    title = models.CharField(verbose_name='Заголовок', max_length=200, null=False)
+    # по условиям задачи не указан размер поля названия постов, сделал 39
+    title = models.CharField(verbose_name='Заголовок', max_length=30, null=False)
     text = models.TextField(verbose_name='Текст', max_length=140)
     created = models.DateTimeField(verbose_name='Создан', auto_now_add=True)
+    # добавил время обновления постов
     updated = models.DateTimeField(verbose_name='Обновлен', auto_now=True)
     user = models.ForeignKey(
         User, verbose_name='Пользователь', on_delete=models.CASCADE
@@ -21,9 +23,11 @@ class Post(models.Model):
     class Meta:
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
+        # ранжирование постов по времени добавления/обновления
         ordering = ['-updated']
 
 
+#Подписка на потсы
 class Follow(models.Model):
     user = models.ForeignKey(
         User, verbose_name='Пользователь', on_delete=models.CASCADE

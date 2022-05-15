@@ -133,6 +133,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Пагинация на страницах
+PAGINATION_PAGE_SIZE = 10
+
 # login
 LOGOUT_REDIRECT_URL = '/'
 

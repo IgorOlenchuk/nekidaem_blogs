@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "blog/base.html" %}
+{% block title %}Подписки{% endblock %}
+{% block header %}Подписки{% endblock %}
+{% block content %}
 
-</body>
-</html>
+    {% include 'blog/includes/menu.html' %}
+
+    <h2 class="">Подписаться/отписаться на блог пользователя</h2>
+    Мои текущие подписки на блоги авторов:
+        {% for subscribe in subscribes %}
+          <b>{{ subscribe.author_blog }}, </b>
+        {% endfor %}
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Подписка/Отписка"/>
+    </form>
+
+{% endblock %}

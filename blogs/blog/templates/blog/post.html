@@ -1,17 +1,23 @@
-{% extends "base.html" %}
+{% extends "blog/base.html" %}
 {% block title %}Блог>{% endblock %}
+{% load my_tags %}
+
 {% block content %}
-    <div class="row">
-            <div class="col-md-3 mb-3 mt-1">
-                {% include 'includes/profile_card.html' %}
-            </div>
 
-            <div class="col-md-9">
+    {% include 'blog/includes/menu.html' %}
 
-            <!-- Пост -->
-            {% for post in page %}
-                {% include "includes/post_item.html" with post=post %}
-            {% endfor %}
-     </div>
-    </div>
+    <h2 class="">Страница поста</h2>
+
+    User: {{ post.user }} <br>
+    Title: {{ post.title }} <br>
+    Text: {{ post.text }} <br>
+    Create: {{ post.created }} <br>
+    Upd: {{ post.updated }} <br>
+
+    <a href="{% url 'update-post' post.pk %}" class="btn btn-success">
+      Обновить</a>
+    <a href="{% url 'remove-post' post.pk %}" class="btn btn-danger">
+      Удалить</a><br>
+    <br>
+
 {% endblock %}

@@ -6,7 +6,6 @@ from .views import NewsFeed, ReadPosts, CreatePost, UserPosts, SubscribeBlog, \
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
-
     path('', NewsFeed.as_view(), name='news-feed'),
     path('read/', ReadPosts.as_view(), name='read-post'),
     path('create/', CreatePost.as_view(), name='create-post'),

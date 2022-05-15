@@ -1,11 +1,13 @@
 {% extends "blog/base.html" %}
 {% load my_tags %}
 {% block title %} Последние обновления {% endblock %}
+
 {% block content %}
-<div class="container">
+    <div class="container">
     {% include "blog/includes/menu.html" with index=True %}
         <h2 class="">Лента новостей</h2>
-            {% for post in posts %}
+        <div class="card mb-3 mt-1 shadow-sm">
+            {% for post in page_obj %}
               {% if post.pk|is_read:request.user.pk == 'Прочитан' %}
                 <div class="text-success">
               {% else %}
@@ -33,5 +35,8 @@
               {% endif %}
               <br>
             {% endfor %}
-</div>
+        </div>
+
+    </div>
+        {% include "blog/includes/paginator.html" %}
 {% endblock %}

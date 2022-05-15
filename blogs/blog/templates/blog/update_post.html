@@ -1,10 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "blog/base.html" %}
+{% block title %}Обновить запись{% endblock %}
+{% block header %}Обновить запись{% endblock %}
+{% block content %}
 
-</body>
-</html>
+    {% include 'blog/includes/menu.html' %}
+
+    <h2 class="">Обновить пост</h2>
+    <form action="" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Обновить"/>
+    </form>
+
+{% endblock %}

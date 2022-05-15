@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% load my_tags %}
+
+<div class="card mb-3 mt-1 shadow-sm">
+    {% for post in posts %}
+      {% if post.pk|is_read:request.user.pk == 'Прочитан' %}
+        <div class="text-success">
+      {% else %}
+        <div class="text-danger">
+      {% endif %}
+    <a href="{% url 'post-page' post.pk %}" class="post_link">
+      User: {{ post.user }} <br>
+      Title: {{ post.title }} <br>
+      Text: {{ post.text }} <br>
+      Create: {{ post.created }} <br>
+      Upd: {{ post.updated }}
+    </a>
+    <form action="{% url 'read-post' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="read" value={{ post.pk }}>
+      <input type="submit" value={{ post.pk|is_read:request.user.pk }}>
+    </form>
+    </div>
+      {% if post.user == request.user %}
+        Это мой пост
+        <a href="{% url 'update-post' post.pk %}" class="btn btn-success">
+          можно обновить</a>
+        <a href="{% url 'remove-post' post.pk %}" class="btn btn-danger">
+          или удалить</a><br>
+      {% endif %}
+      <br>
+    {% endfor %}
+</div>
