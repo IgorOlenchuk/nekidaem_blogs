@@ -27,5 +27,6 @@ services:
     depence_on:
       - web
 volumes:
+  postgres_data:
   static_volue:
   media_volue:
