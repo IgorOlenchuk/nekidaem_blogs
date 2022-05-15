@@ -1,12 +1,5 @@
 name: nekidaem_workflow
-
-    on:
-      push:
-        branches:
-          - master
-      pull_request:
-        branches:
-          - master
+    on: [push]
 
     jobs:
       linter:
