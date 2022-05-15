@@ -144,4 +144,3 @@ class PostPage(OnlyLoggedUserMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'страница поста'
         return context
-
