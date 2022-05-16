@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.generic import ListView, UpdateView, CreateView, \
-    DetailView, DeleteView
+from django.views.generic import ListView, UpdateView, CreateView
+from django.views.generic import DetailView, DeleteView
 
 from .models import Follow, Post, ReadPost
 
@@ -36,7 +36,7 @@ class NewsFeed(OnlyLoggedUserMixin, ListView):
         context['page_title'] = 'лента новостей'
         return context
 
-    # У пользователя есть персональная лента новостей (не более ~500 постов), ограничил выборку в 500.
+    # (не более ~500 постов), ограничил выборку в 500.
     def get_queryset(self):
         if self.request.user.is_authenticated:
             subscriptions = self.model.objects.filter(user=self.request.user)
@@ -62,7 +62,11 @@ class ReadPosts(OnlyLoggedUserMixin, View):
         return HttpResponseRedirect(reverse_lazy('news-feed'))
 
 
-class CreatePost(OnlyLoggedUserMixin, AutoFieldForUserMixin, CreateView):
+class CreatePost(
+    OnlyLoggedUserMixin,
+    AutoFieldForUserMixin,
+    CreateView
+):
     template_name = 'blog/new.html'
     model = Post
     fields = ['title', 'text']
@@ -117,7 +121,11 @@ class SubscribeBlog(OnlyLoggedUserMixin, CreateView):
             return self.model.objects.filter(user=self.request.user)
 
 
-class UpdatePost(OnlyLoggedUserMixin, AutoFieldForUserMixin, UpdateView):
+class UpdatePost(
+    OnlyLoggedUserMixin,
+    AutoFieldForUserMixin,
+    UpdateView
+):
     template_name = 'blog/update_post.html'
     model = Post
     fields = ['title', 'text']

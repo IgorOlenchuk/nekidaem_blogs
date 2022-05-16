@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand
 from django.core.management.color import no_style
 from django.db import connection
 
-from blogs.blog.models import Post
+from blog.models import Post
 
 
 def load_from_json(file_name: str) -> dict:
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 post['fields']['user'] = _user
 
                 new_publication = Post(**{'id': post['pk']},
-                                           **post['fields'])
+                                       **post['fields'])
                 new_publication.save()
 
             self.reset_sequences()
@@ -78,14 +78,14 @@ class Command(BaseCommand):
 
     @staticmethod
     def reset_sequences():
-        """Сброс последовательностей в базе данных после авто-заполнения табл."""
+        """Сброс последовательностей в БД после авто-заполнения табл."""
         sequence_sql = connection.ops.sequence_reset_sql(
             no_style(), [Post, get_user_model()])
         with connection.cursor() as cursor:
             for sql in sequence_sql:
                 cursor.execute(sql)
 
-    @staticmethod
-    def collect_static():
-        """Сборка стандартных и подготовленных статических файлов"""
-        os.system('python manage.py collectstatic --no-input --clear')
+    # @staticmethod
+    # def collect_static():
+    #     """Сборка стандартных и подготовленных статических файлов"""
+    #     os.system('python manage.py collectstatic --no-input --clear')

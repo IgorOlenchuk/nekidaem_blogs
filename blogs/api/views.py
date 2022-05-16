@@ -8,8 +8,10 @@ from .permissions import IsAuthorOrAdmin
 
 from blog.models import Post
 
+from blog.views import OnlyLoggedUserMixin
 
-class PostViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+
+class PostViewSet(OnlyLoggedUserMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = (filters.SearchFilter,)
@@ -36,4 +38,3 @@ class ReadPostViewSet(mixins.CreateModelMixin,
 
     def get_queryset(self):
         return super().get_queryset().filter(user=self.request.user)
-

@@ -2,9 +2,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.fields import HiddenField, CurrentUserDefault
 from rest_framework import serializers
 
-from blog.models import Post
-from blog.models import ReadPost
-from blog.models import Follow
+from blog.models import Post, ReadPost, Follow
 
 
 def validate_author(data):

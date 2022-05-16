@@ -1,8 +1,8 @@
 from django.contrib.auth.views import LoginView
 from django.urls import path
 
-from .views import NewsFeed, ReadPosts, CreatePost, UserPosts, SubscribeBlog, \
-    UpdatePost, DeletePost, PostPage
+from .views import NewsFeed, ReadPosts, CreatePost, UserPosts
+from .views import SubscribeBlog, UpdatePost, DeletePost, PostPage
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
