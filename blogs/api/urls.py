@@ -1,19 +1,15 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import PostViewSet
-from .views import FollowViewSet
-from .views import ReadPostViewSet
+from .views import PostViewSet, SinglePostView
+from .views import PostCreateView
+
 
 router_v1 = DefaultRouter()
 router_v1.register(r'postpage', PostViewSet, basename='post-page')
-router_v1.register(
-    r'subscribe',
-    FollowViewSet,
-    basename='subscribe',
-)
-router_v1.register(r'read', ReadPostViewSet, basename='read-post')
 
 urlpatterns = [
     path('v1/', include(router_v1.urls)),
+    path('v1/post/', PostCreateView.as_view()),
+    path('v1/post/<int:pk>', SinglePostView.as_view()),
 ]
