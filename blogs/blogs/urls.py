@@ -8,6 +8,7 @@ handler500 = 'blogs.views.server_error'
 
 urlpatterns = [
     # раздел администратора
+    path('accounts/', include('users.urls')),
     path('accounts/', include("django.contrib.auth.urls")),
     path('admin/', admin.site.urls),
 ]
