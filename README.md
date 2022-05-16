@@ -138,7 +138,8 @@ docker-compose -f docker-compose.yml exec web python manage.py collectstatic --n
 ```
 5) Заполнить таблицы подготовленными данными. `3-4` можно пропустить - сразу запустить этот пункт
 ```shell
-docker-compose -f docker-compose.yml exec web python manage.py fill_db```
+docker-compose -f docker-compose.yml exec web python manage.py fill_db
+```
 
 ### Автор
 Игорь Оленчук
