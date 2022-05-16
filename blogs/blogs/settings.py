@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-jw!&ox7arzw7b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', default=True)
 
-ALLOWED_HOSTS = ['olenchuk.hopto.org', '188.170.77.73', "localhost", "127.0.0.1", "0.0.0.0"]
+ALLOWED_HOSTS = ["olenchuk.hopto.org", "188.170.77.73", "0.0.0.0", "127.0.0.1"]
 
 
 # Application definition

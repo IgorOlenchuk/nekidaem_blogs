@@ -85,7 +85,7 @@ class Command(BaseCommand):
             for sql in sequence_sql:
                 cursor.execute(sql)
 
-    # @staticmethod
-    # def collect_static():
-    #     """Сборка стандартных и подготовленных статических файлов"""
-    #     os.system('python manage.py collectstatic --no-input --clear')
+    @staticmethod
+    def collect_static():
+         """Сборка стандартных и подготовленных статических файлов"""
+         os.system('python manage.py collectstatic --no-input --clear')
