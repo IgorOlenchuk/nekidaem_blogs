@@ -22,8 +22,8 @@ class PostCreateView(OnlyLoggedUserMixin,
     queryset = Post.objects.all()
     serializer_class = PostSerializer
 
-    def perform_create(self, serializer):
-        return serializer.save()
+    def perform_create(self, serializer_class):
+        return serializer_class.save()
 
 
 class SinglePostView(OnlyLoggedUserMixin,
