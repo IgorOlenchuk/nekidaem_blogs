@@ -85,7 +85,7 @@ _Реализовать rest api:_
 vim .env
 ```
 ```text
-SECRET_KEY="bw&*hlrr^p$8qs^@kcvo8@r8sks+@ojtel8j04-t#&@pxl%#o="
+SECRET_KEY="django-insecure-jw!&ox7arzw7b1js8n6jp!9vm^#25&#z9!p*e-+6x2fb(gt#^x"
 DEBUG=True/False
 DJANGO_ALLOWED_HOSTS="0.0.0.0, [::1]"
 DEFAULT_FROM_EMAIL=example@example.com
