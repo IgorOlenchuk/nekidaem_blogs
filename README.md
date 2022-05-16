@@ -96,47 +96,47 @@ POSTGRES_PASSWORD=postgres
 DB_HOST=db
 DB_PORT=5432
 ```
-####2) Устанавливаем [Docker](https://docs.docker.com/engine/install/)
-####3) Собираем `docker-compose` в detach mode (background):
+###2) Устанавливаем [Docker](https://docs.docker.com/engine/install/)
+###3) Собираем `docker-compose` в detach mode (background):
 ```shell
 docker-compose up --build -d --force-recreate
 ```
-####4) Собираем статические файлы в `STATIC_ROOT`:
+###4) Собираем статические файлы в `STATIC_ROOT`:
 ```shell
 docker-compose exec web python3 manage.py collectstatic --noinput
 ```
-####5) Запускаем миграции:
+###5) Запускаем миграции:
 ```shell
 docker-compose exec web python3 manage.py migrate --noinput
 ```
-####6) Наполняем `Postgres` данными:
+###6) Наполняем `Postgres` данными:
 ```shell
 docker-compose exec web python3 manage.py loaddata fixture.json
 ```
-####7) Останавливаем и удаляем контейнеры, сети, тома и образы:
+###7) Останавливаем и удаляем контейнеры, сети, тома и образы:
 ```shell
 docker-compose down -v --remove-orphans
 ```
 <br><br>
 **[⬆ Back to Index](#index)**
 ## Deploy
-####1) Выдать права на запуск данных скриптов: 
+###1) Выдать права на запуск данных скриптов: 
 ```shell
 chmod +x ./blog/entrypoint.sh && chmod +x ./blog/entrypoint.prod.sh
 ```
-####2) Создать образ и запустить контейнер в фоне:
+###2) Создать образ и запустить контейнер в фоне:
 ```shell
 docker-compose -f docker-compose.yml up -d --build
 ```
-####3) Выполнить миграции
+###3) Выполнить миграции
 ```shell
 docker-compose -f docker-compose.yml exec web python manage.py migrate --noinput
 ```
-####4) Сборка стандартных и подготовленных статических файлов 
+###4) Сборка стандартных и подготовленных статических файлов 
 ```shell
 docker-compose -f docker-compose.yml exec web python manage.py collectstatic --no-input --clear
 ```
-####5) Заполнить таблицы подготовленными данными. `3-4` можно пропустить - сразу запустить этот пункт
+###5) Заполнить таблицы подготовленными данными. `3-4` можно пропустить - сразу запустить этот пункт
 ```shell
 docker-compose -f docker-compose.yml exec web python manage.py fill_db```
 
